@@ -9,6 +9,8 @@ Para que os exemplos tenham um efeito mais didático, idealmente use pelo menos 
 
 ## Diretório
 
-Por padrão, o diretório de leitura está configurado para: `src/main/resources`. Esse diretório pode ser trocado na 
+Por padrão, o diretório de leitura está configurado para: `src/main/resources/nfe`. Esse diretório pode ser trocado na 
 classe `Main`.
 
+## Resultado
+O resultado é gravado em outro `csv` que fica em `src/main/resources/resultado`

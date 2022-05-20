@@ -1,5 +1,6 @@
 import java.io.File;
 import java.math.BigDecimal;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,6 +10,8 @@ import static java.util.Objects.requireNonNull;
 public class ProcessadorDeArquivos {
 
     private final LeitorCSV<NotaFiscalItem> leitor = new LeitorCSV<>();
+    private final EscritorCSV escritor = new EscritorCSV();
+    private final RelatorioNFConversor conversor = new RelatorioNFConversor();
 
     public void processaArquivosDo(String diretorio) {
 
@@ -29,8 +32,9 @@ public class ProcessadorDeArquivos {
             barraDeProgresso.incrementa();
         }
 
+        List<RelatorioNF> relatorioNFs = conversor.converte(totaisPorDestinatario);
 
-        System.out.println(totaisPorDestinatario);
+        escritor.escreve(relatorioNFs, Path.of("src/main/resources/relatorio/relatorio.csv"));
     }
 
     private void agrupaTotal(List<NotaFiscalItem> notaFiscalItems, Map<String, BigDecimal> totaisPorDestinatario) {
