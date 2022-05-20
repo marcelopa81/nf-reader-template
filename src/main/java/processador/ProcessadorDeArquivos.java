@@ -1,3 +1,10 @@
+package processador;
+
+import dto.NotaFiscalItem;
+import dto.RelatorioNF;
+import io.EscritorCSV;
+import io.LeitorCSV;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Path;

@@ -1,16 +1,18 @@
-public class BarraDeProgresso {
+package processador;
+
+class BarraDeProgresso {
 
     private final int TAMANHO_MAXIMO_DA_BARRA = 100;
     private final int totalDeArquivos;
 
     private int arquivosProcessados = 0;
 
-    public BarraDeProgresso(int totalDeArquivos) {
+    BarraDeProgresso(int totalDeArquivos) {
         this.totalDeArquivos = totalDeArquivos;
     }
 
 
-    public void incrementa() {
+    void incrementa() {
         if (arquivosProcessados < totalDeArquivos) {
             arquivosProcessados++;
         }
@@ -18,7 +20,7 @@ public class BarraDeProgresso {
         vizualizar();
     }
 
-    public void vizualizar() {
+    void vizualizar() {
 
         double coeficienteProcessado = (double) arquivosProcessados / totalDeArquivos;
 

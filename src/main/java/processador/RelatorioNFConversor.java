@@ -1,11 +1,15 @@
+package processador;
+
+import dto.RelatorioNF;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class RelatorioNFConversor {
+class RelatorioNFConversor {
 
-    public List<RelatorioNF> converte(Map<String, BigDecimal> totaisPorDestinatario) {
+    List<RelatorioNF> converte(Map<String, BigDecimal> totaisPorDestinatario) {
 
         return totaisPorDestinatario.entrySet()
                 .stream()
