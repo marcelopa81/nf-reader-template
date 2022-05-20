@@ -7,3 +7,8 @@ s usa somente os de nome `...NFe_NotaFiscalItem.csv` pois o a maneira de seriali
 
 Para que os exemplos tenham um efeito mais didático, idealmente use pelo menos 5 arquivos ou mais (cada um tem aproximadamente 200mb)
 
+## Diretório
+
+Por padrão, o diretório de leitura está configurado para: `src/main/resources`. Esse diretório pode ser trocado na 
+classe `Main`.
+
