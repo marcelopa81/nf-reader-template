@@ -24,7 +24,7 @@ public class ProcessadorDeArquivos {
 
             List<NotaFiscalItem> notaFiscalItems = leitor.leia(arquivo, NotaFiscalItem.class);
 
-            totaisPorDestinatario.putAll(agrupaTotal(notaFiscalItems));
+            agrupaTotal(notaFiscalItems, totaisPorDestinatario);
 
             barraDeProgresso.incrementa();
         }
@@ -33,19 +33,16 @@ public class ProcessadorDeArquivos {
         System.out.println(totaisPorDestinatario);
     }
 
-    private Map<String, BigDecimal> agrupaTotal(List<NotaFiscalItem> notaFiscalItems) {
-        Map<String, BigDecimal> totalPorDestinatario = new HashMap<>();
+    private void agrupaTotal(List<NotaFiscalItem> notaFiscalItems, Map<String, BigDecimal> totaisPorDestinatario) {
 
         notaFiscalItems.forEach(nf -> {
 
-            BigDecimal valorAnterior = totalPorDestinatario.putIfAbsent(nf.getNomeDestinatario(), nf.getValorTotal());
+            BigDecimal valorAnterior = totaisPorDestinatario.putIfAbsent(nf.getNomeDestinatario(), nf.getValorTotal());
 
             if (Objects.nonNull(valorAnterior)) {
-                totalPorDestinatario.put(nf.getNomeDestinatario(), valorAnterior.add(nf.getValorTotal()));
+                totaisPorDestinatario.put(nf.getNomeDestinatario(), valorAnterior.add(nf.getValorTotal()));
             }
         });
-
-        return totalPorDestinatario;
     }
 
     private void checaSeEhCSV(File arquivo) {
