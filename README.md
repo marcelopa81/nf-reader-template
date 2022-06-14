@@ -1,5 +1,5 @@
 ## Arquivos
-As Notas fiscais usadas foram baixadas do [portal da transparencia](//https://www.portaltransparencia.gov.br/download-de-dados/notas-fiscais)
+As Notas fiscais usadas foram baixadas do [portal da transparencia](https://www.portaltransparencia.gov.br/download-de-dados/notas-fiscais)
 em formato `csv`.
 
 Somente é possível baixar um `.zip` com os arquivos de cada mês. Dentro desse `.zip` existem vários arquivos, mas iremo
