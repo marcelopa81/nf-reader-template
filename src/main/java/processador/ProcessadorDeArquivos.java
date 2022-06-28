@@ -8,6 +8,8 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,11 +29,15 @@ public class ProcessadorDeArquivos {
 
         BarraDeProgresso barraDeProgresso = new BarraDeProgresso(arquivos.size());
 
+        ExecutorService threadPool = Executors.newFixedThreadPool(2);
+
         for (File arquivo : arquivos) {
-            Thread thread = new Thread(new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
+            threadPool.execute(new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
                     barraDeProgresso));
-            thread.start();
-            System.out.println(thread.getName());
+//            Thread thread = new Thread(new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
+//                    barraDeProgresso));
+//            thread.start();
+           // System.out.println(thread.getName());
         }
 
         List<RelatorioNF> relatorioNFs = conversor.converte(totaisPorDestinatario);
