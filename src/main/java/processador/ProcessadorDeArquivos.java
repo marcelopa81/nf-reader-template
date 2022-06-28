@@ -37,7 +37,7 @@ public class ProcessadorDeArquivos {
 //            Thread thread = new Thread(new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
 //                    barraDeProgresso));
 //            thread.start();
-           // System.out.println(thread.getName());
+//            System.out.println(thread.getName());
         }
 
         List<RelatorioNF> relatorioNFs = conversor.converte(totaisPorDestinatario);
