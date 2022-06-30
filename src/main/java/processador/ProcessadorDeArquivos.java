@@ -26,7 +26,7 @@ public class ProcessadorDeArquivos {
 
         BarraDeProgresso barraDeProgresso = new BarraDeProgresso(arquivos.size());
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(2);
+        ExecutorService threadPool = Executors.newFixedThreadPool(2, new FabricaDeThreads());
 
         for (File arquivo : arquivos) {
             TarefaLeiutaParalelaNotas tarefaLeiutaParalelaNotas = new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
@@ -36,8 +36,8 @@ public class ProcessadorDeArquivos {
         }
 
         for (Future<Map<String, BigDecimal>> future : futures) {
-            Map<String, BigDecimal> futuro = future.get();
-            totaisPorDestinatario.putAll(futuro);
+            Map<String, BigDecimal> futureAgrupaResultados = future.get();
+            totaisPorDestinatario.putAll(futureAgrupaResultados);
         }
 
         threadPool.shutdown();
