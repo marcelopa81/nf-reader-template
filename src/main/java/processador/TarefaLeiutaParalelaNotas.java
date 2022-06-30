@@ -5,11 +5,13 @@ import io.LeitorCSV;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
-public class TarefaLeiutaParalelaNotas implements Runnable {
+public class TarefaLeiutaParalelaNotas implements Callable<Map<String, BigDecimal>> {
 
     private File arquivo;
     private Map<String, BigDecimal> totaisPorDestinatario;
@@ -24,7 +26,9 @@ public class TarefaLeiutaParalelaNotas implements Runnable {
     }
 
     @Override
-    public void run() {
+    public Map<String, BigDecimal> call(){
+        Map<String, BigDecimal> totaisPorDestinatario = new HashMap<>();
+
         checaSeEhCSV(arquivo);
 
         List<NotaFiscalItem> notaFiscalItems = leitor.leia(arquivo, NotaFiscalItem.class);
@@ -32,6 +36,8 @@ public class TarefaLeiutaParalelaNotas implements Runnable {
         agrupaTotal(notaFiscalItems, totaisPorDestinatario);
 
         barraDeProgresso.incrementa();
+
+        return totaisPorDestinatario;
     }
 
     private void agrupaTotal(List<NotaFiscalItem> notaFiscalItems, Map<String, BigDecimal> totaisPorDestinatario) {

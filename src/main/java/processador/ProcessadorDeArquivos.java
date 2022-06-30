@@ -3,27 +3,24 @@ package processador;
 import dto.RelatorioNF;
 import io.EscritorCSV;
 
-
 import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
 public class ProcessadorDeArquivos {
-
-
     private final EscritorCSV escritor = new EscritorCSV();
     private final RelatorioNFConversor conversor = new RelatorioNFConversor();
+    private final List<Future<Map<String, BigDecimal>>> futures = new ArrayList<>();
 
-    public void processaArquivosDo(String diretorio) {
+    public void processaArquivosDo(String diretorio) throws ExecutionException, InterruptedException, TimeoutException {
 
-        Map<String, BigDecimal> totaisPorDestinatario = new HashMap<>();
+        Map<String, BigDecimal> totaisPorDestinatario = new ConcurrentHashMap<>();
 
         Set<File> arquivos = listFilesFrom(diretorio);
 
@@ -32,13 +29,18 @@ public class ProcessadorDeArquivos {
         ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
         for (File arquivo : arquivos) {
-            threadPool.execute(new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
-                    barraDeProgresso));
-//            Thread thread = new Thread(new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
-//                    barraDeProgresso));
-//            thread.start();
-//            System.out.println(thread.getName());
+            TarefaLeiutaParalelaNotas tarefaLeiutaParalelaNotas = new TarefaLeiutaParalelaNotas(arquivo, totaisPorDestinatario,
+                    barraDeProgresso);
+            Future<Map<String, BigDecimal>> futureTotal = threadPool.submit(tarefaLeiutaParalelaNotas);
+            futures.add(futureTotal);
         }
+
+        for (Future<Map<String, BigDecimal>> future : futures) {
+            Map<String, BigDecimal> futuro = future.get();
+            totaisPorDestinatario.putAll(futuro);
+        }
+
+        threadPool.shutdown();
 
         List<RelatorioNF> relatorioNFs = conversor.converte(totaisPorDestinatario);
 
