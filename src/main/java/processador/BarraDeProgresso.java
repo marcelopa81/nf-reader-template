@@ -17,6 +17,10 @@ class BarraDeProgresso {
             arquivosProcessados++;
         }
 
+//        if(arquivosProcessados > 2){
+//            throw new RuntimeException("Erro");
+//        }
+
         vizualizar();
     }
 

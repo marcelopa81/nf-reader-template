@@ -3,12 +3,12 @@ package processador;
 import io.EnviaEmail;
 
 public class TratadorDeExcecaoHandler implements Thread.UncaughtExceptionHandler {
+    private final EnviaEmail emailErro = new EnviaEmail();
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-
-        EnviaEmail enviaEmail = new EnviaEmail();
-
-        System.out.println("Ocorreu uma excecão da Therad: " + t.getName() + "," + "erro: " + e.getMessage());
+        System.out.println("Ocorreu uma excecão da Therad: " + t.getName() + "," + "erro: " +
+                e.getMessage());
+        emailErro.enviaEmail();
 
     }
 }

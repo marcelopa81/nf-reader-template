@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 public class TarefaLeiutaParalelaNotas implements Callable<Map<String, BigDecimal>> {
 
     private File arquivo;
-    private Map<String, BigDecimal> totaisPorDestinatario;
+    private Map<String, BigDecimal> totaisPorDestinatario = new HashMap<>();
     private BarraDeProgresso barraDeProgresso;
     private final LeitorCSV<NotaFiscalItem> leitor = new LeitorCSV<>();
 

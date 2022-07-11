@@ -2,6 +2,7 @@ package processador;
 
 import dto.RelatorioNF;
 import io.EscritorCSV;
+import model.Relatorio;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -17,10 +18,11 @@ public class ProcessadorDeArquivos {
     private final EscritorCSV escritor = new EscritorCSV();
     private final RelatorioNFConversor conversor = new RelatorioNFConversor();
     private final List<Future<Map<String, BigDecimal>>> futures = new ArrayList<>();
+    private final GeraRelatorio gerador = new GeraRelatorio();
 
     public void processaArquivosDo(String diretorio) throws ExecutionException, InterruptedException, TimeoutException {
 
-        Map<String, BigDecimal> totaisPorDestinatario = new ConcurrentHashMap<>();
+        Map<String, BigDecimal> totaisPorDestinatario = new HashMap<>();
 
         Set<File> arquivos = listFilesFrom(diretorio);
 
@@ -36,23 +38,32 @@ public class ProcessadorDeArquivos {
         }
 
         for (Future<Map<String, BigDecimal>> future : futures) {
-            Map<String, BigDecimal> futureAgrupaResultados = future.get();
-            totaisPorDestinatario.putAll(futureAgrupaResultados);
+            totalPorDestinatarioAgrupado(totaisPorDestinatario, future.get());
         }
 
         threadPool.shutdown();
 
-        List<RelatorioNF> relatorioNFs = conversor.converte(totaisPorDestinatario);
+        List<Relatorio> relatorioNFs = conversor.converte(totaisPorDestinatario);
 
-        escritor.escreve(relatorioNFs, Path.of("src/main/resources/relatorio/relatorio.csv"));
+        gerador.geraRelatorio(relatorioNFs);
+      //  escritor.escreve(relatorioNFs, Path.of("src/main/resources/relatorio/relatorio.csv"));
     }
-
-
 
 
     private Set<File> listFilesFrom(String diretorio) {
         return Stream.of(requireNonNull(new File(diretorio).listFiles()))
                 .filter(file -> !file.isDirectory())
                 .collect(Collectors.toSet());
+    }
+
+    private void totalPorDestinatarioAgrupado(Map<String, BigDecimal> totalPorDestinatario, Map<String,
+            BigDecimal> futureMap) {
+        futureMap.forEach((key, value) -> {
+            totalPorDestinatario.putIfAbsent(key, futureMap.get(key));
+            if (totalPorDestinatario.containsKey(key)) {
+                totalPorDestinatario.put(key, totalPorDestinatario.get(key).add(value));
+
+            }
+        });
     }
 }
